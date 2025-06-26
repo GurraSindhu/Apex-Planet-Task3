@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Web Project</title>
+  <style>
+    /* Base styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #2c2c2c; /* darker background */
+      color: #f0f0f0;
+    }
+
+    header {
+      background: #1E88E5;
+      padding: 1em;
+      color: white;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      background-color: #111;
+    }
+
+    nav a {
+      padding: 1em;
+      color: white;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      background-color: #444;
+    }
+
+    main {
+      padding: 2em;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2em;
+    }
+
+    .card {
+      background: #424242;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      padding: 1.5em;
+    }
+
+    h2 {
+      text-align: center;
+      color: #81C784;
+    }
+
+    /* Carousel */
+    #carousel img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 1em;
+    }
+
+    /* Quiz Buttons */
+    .quiz-buttons button {
+      margin: 0.5em;
+      padding: 0.5em 1em;
+      background: #43A047;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .quiz-buttons button:hover {
+      background: #388E3C;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.5em;
+      }
+
+      .card {
+        padding: 1em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav a {
+        flex: 1 1 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Interactive Web Project</h1>
+</header>
+
+<nav>
+  <a href="#quiz">Quiz</a>
+  <a href="#carousel">Carousel</a>
+  <a href="#api">Joke API</a>
+  <a href="#about">About Me</a>
+  <a href="#products">Products</a>
+</nav>
+
+<main>
+  <!-- Quiz Section -->
+  <section class="card" id="quiz">
+    <h2>🧠 Knowledge Quiz</h2>
+    <p id="question">Loading question...</p>
+    <div class="quiz-buttons">
+      <button onclick="answer('a')">A</button>
+      <button onclick="answer('b')">B</button>
+    </div>
+    <p id="result"></p>
+  </section>
+
+  <!-- Image Carousel Section -->
+  <section class="card" id="carousel">
+    <h2>🖼 Image Carousel</h2>
+    <img id="carouselImage" src="https://via.placeholder.com/400x250?text=1" alt="Carousel Image"/>
+    <div class="quiz-buttons">
+      <button onclick="prev()">⏪ Prev</button>
+      <button onclick="next()">Next ⏩</button>
+    </div>
+  </section>
+
+  <!-- API Fetch Section -->
+  <section class="card" id="api">
+    <h2>😂 Random Joke</h2>
+    <button onclick="getJoke()">Get Joke</button>
+    <p id="joke" style="margin-top: 1em;"></p>
+  </section>
+
+  <!-- About Me Section -->
+  <section class="card" id="about">
+    <h2>👨‍💻 About Me</h2>
+    <p>Hello! I'm a web developer passionate about building fun, interactive experiences. I love JavaScript, open APIs, and responsive design.</p>
+  </section>
+
+  <!-- Product List Section -->
+  <section class="card" id="products">
+    <h2>🛍 Featured Products</h2>
+    <ul>
+      <li>📱 Smartwatch Pro - $199</li>
+      <li>🎧 Noise-Canceling Headphones - $149</li>
+      <li>💡 Smart LED Light - $29</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+  // New Quiz logic
+  const quiz = [
+    {
+      q: "Which planet is known as the Red Planet?",
+      options: { a: "Mars", b: "Jupiter" },
+      correct: "a"
+    },
+    {
+      q: "Which language is used for web apps?",
+      options: { a: "Python", b: "JavaScript" },
+      correct: "b"
+    },
+    {
+      q: "What does HTML stand for?",
+      options: { a: "Hyper Text Markup Language", b: "Hot Mail Transfer Language" },
+      correct: "a"
+    }
+  ];
+
+  let current = 0;
+
+  function loadQuestion() {
+    const q = quiz[current];
+    document.getElementById("question").innerText = q.q;
+    document.querySelectorAll(".quiz-buttons button")[0].innerText = "A: " + q.options.a;
+    document.querySelectorAll(".quiz-buttons button")[1].innerText = "B: " + q.options.b;
+    document.getElementById("result").innerText = "";
+  }
+
+  function answer(ans) {
+    const q = quiz[current];
+    const result = ans === q.correct ? "✅ Correct!" : "❌ Wrong!";
+    document.getElementById("result").innerText = result;
+    current = (current + 1) % quiz.length;
+    setTimeout(loadQuestion, 1500);
+  }
+
+  loadQuestion();
+
+  // Carousel logic
+  const images = [
+    "https://www.w3.org/TR/2019/NOTE-wai-aria-practices-1.1-20190207/examples/carousel/carousel-1/images/lands-endslide__800x600.jpg",
+    "https://mdbootstrap.com/img/Photos/Slides/img%20(130).jpg",
+    "https://rawgit.com/creativetimofficial/material-kit/master/assets/img/bg2.jpg"
+  ];
+  let index = 0;
+
+  function showImage() {
+    document.getElementById("carouselImage").src = images[index];
+  }
+
+  function next() {
+    index = (index + 1) % images.length;
+    showImage();
+  }
+
+  function prev() {
+    index = (index - 1 + images.length) % images.length;
+    showImage();
+  }
+
+  // Joke API logic
+  async function getJoke() {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    const data = await res.json();
+    document.getElementById('joke').innerText = `${data.setup} — ${data.punchline}`;
+  }
+</script>
+
+</body>
+</html>
